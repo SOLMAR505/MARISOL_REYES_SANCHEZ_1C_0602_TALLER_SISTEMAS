@@ -49,7 +49,6 @@ int main(int argc, char const *argv[]){
     char buferarchivo[30];
     int existe_arch = 0;    
 
-
     if (argc > 2 && argc <= 3){
         strcpy(ingresar, argv[1]);
         strcpy(salida, argv[2]);
@@ -106,7 +105,6 @@ int main(int argc, char const *argv[]){
             } 
             char palabras[contador+1][TAM_NOMBRE];
             cerrar_archivo(inputFile, ingresar);
-   
             inputFile = abrir_Archivo_solo_Lectura(ingresar);
             contador = 0;
             fscanf(inputFile, "%s", buferarchivo);
