@@ -12,7 +12,7 @@ FILE *abrir_Archivo_lectura_escritura(char *nombre_arch);
 int tiene_datos_arch(char *nombre_arch);
 FILE *abrir_Archivo_solo_Lectura(char *nombre_arch);
 void imprimir_vector(int vector[], int tam);
-void ordBurbuja(int a[], int n);
+void burbuja(char arreglo[][TAM_NOMBRE], int longitud);
 int total_numeros_Arch(char *nombre_arch);
 
 int main(int argc, char const *argv[]){     
@@ -80,11 +80,38 @@ int main(int argc, char const *argv[]){
                 printf("%s\n", buferarchivo);
                 fscanf(inputFile, "%s",buferarchivo);
                 contador++;
-            }               
+            } 
+            printf("\nTotal de palabras leídas: %d\n", contador);
+            char palabras[contador+1][TAM_NOMBRE];
+            cerrar_archivo(inputFile, inputNombre);
+   
+            inputFile = abrir_Archivo_solo_Lectura(inputNombre);
+            contador = 0;
+            fscanf(inputFile, "%s", buferarchivo);
+            memcpy(palabras[contador], buferarchivo, TAM_NOMBRE);
+            while(!feof(inputFile)){
+                contador++;
+                fscanf(inputFile, "%s", buferarchivo);
+                memcpy(palabras[contador], buferarchivo, TAM_NOMBRE);
+            }
+            cerrar_archivo(inputFile, inputNombre);
+
+        
+            printf("\nImprimiendo arreglo sin ordenar\n");
+            int i;
+            for (i = 0; i < contador; i++){
+                printf("%d.  %s\n", i, palabras[i]);
+            }
+            burbuja(palabras, contador);
+
+            printf("\nImprimirendo arreglo ordenado\n");
+            for (i = 0; i < contador; i++){
+                printf("%d. %s\n", i, palabras[i]);
+            }
+        }              
             printf("\t Total de palabras leidas = %d\n\n", contador);                    
             printf("---------------------------------------------------------------------------\n");
             printf("\t---> LECTURA TERMINADA <---\n");                  
-       }
     }else{
         printf("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°\n");
         printf("\tEL ARCHIVO -> %s <- NO TIENE DATOS.\n", inputNombre);
@@ -96,16 +123,27 @@ int main(int argc, char const *argv[]){
 
 }
 
+void burbuja(char arreglo[][TAM_NOMBRE], int longitud){
+    // Arreglo temporal para el intercamio de las cadenas
+    char temporal[TAM_NOMBRE];
 
+    int i, iActual;
+    for (i = 0; i < longitud; i++){
+        for (iActual = 0; iActual < longitud - 1; iActual++){
+            int iSig = iActual + 1;
 
-void imprimir_vector(int vector[], int tam){
-    int i;
-    for(i = 0; i < tam; i++){
-        printf("%5d", vector[i]);
-        if((i+1)%5 == 0)
-            printf("\n");       
+            // Si la cadena es mayor que la siguiente (alfabeticamente) entonces intercambian
+            if (strcmp(arreglo[iActual], arreglo[iSig]) > 0){
+                // Mueve la cadena actual a a temporal
+                memcpy(temporal, arreglo[iActual], TAM_NOMBRE);
+                // Mueve al actual el siguiente elemento
+                memcpy(arreglo[iActual], arreglo[iSig], TAM_NOMBRE);
+                // El siguiente elemento, lo que había antes en el actual ahora está en el temporal
+                memcpy(arreglo[iSig], temporal, TAM_NOMBRE);
+            }
+        }
     }
-    printf("\n");
+    // No se devuelve anda
 }
 
 int total_numeros_Arch(char *nombre_arch){
